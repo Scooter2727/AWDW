@@ -1,84 +1,74 @@
 # Accessibility implementation and verification
 
-Updated November 7, 2026. Scope: improve accessibility of the original challenge page without adding event information or new content sections. Target: WCAG 2.2 AA for the existing page and controls.
+Updated November 7, 2026. The existing page's wording and photographs are retained, with a mock application form explicitly requested for the accessibility demonstration. Target: WCAG 2.2 AA. The original ZIP preview on port 4174 is unchanged.
 
-## Recorded results
+## Recorded checks
 
-- Chrome: 20 of 20 checks passed.
-- Microsoft Edge: 20 of 20 checks passed.
-- Axe: 10 scans across both browsers, zero detected violations.
+- Chrome: 28 of 28 tests passed.
+- Microsoft Edge: 28 of 28 tests passed.
+- Axe: 16 scans across both browsers, zero detected violations.
 - HTML validation: passed without errors or warnings.
-- Dependency audit: zero reported vulnerabilities.
-- Final browser run after the readability/skip-link update: 29.9 seconds. Grenze Gotisch is now limited to the h1 title; a separate visual check confirmed the themed skip link fits at 320px. Original missing link destinations remain a documented limitation; passing tests do not certify those links as functional.
+- Final browser suite after integrating the repository's Verdana font update: 44.7 seconds.
+- Actual screen-reader speech: listening check still required.
 
-## Content preservation
+The test suite includes the original 20 checks adapted to the mock form and eight additional checks per browser. The eight check named semantic roles/headings/input purposes; Apply Now focus; linked errors and descriptions; invalid-email/whitespace handling; keyboard radio/checkbox/submission and network/storage behavior; local review/reset; exclusion of form values from search; and form reflow/forced colors.
 
-The page retains HackTrent, @ Trent University, the Search/Go controls, all five navigation labels, Main content, both original Lorem ipsum paragraphs, the right-sidebar text, both photographs, HackTrent2025 Recap, November 15, 2025, the original copyright text, and the three footer labels.
-
-The only new on-page text consists of accessibility/interaction assistance: the keyboard skip link and search feedback. Image descriptions are new accessibility metadata. The title's spelling is corrected. Footer pipe separators are replaced with a semantic list.
-
-The previously added hero copy, application form, draft generation, schedule table, contact guidance, FAQ/disclosure, recap article, accessibility article, and policy sections have been removed. Nothing from the reference site's event description, dates, registration, or team information has been copied into the page.
+Axe scans cover desktop, mobile at 320px, search errors, search matches, forced colors, mock form errors, mock form success, and mobile/forced-color mock success. One forced-color search scan requests manual contrast review of the system-colored highlight; its readability should be checked in the actual OS theme. No rules are suppressed.
 
 ## Keyboard navigation and focus — 25 possible points
 
-- Original click-only navigation items are native, keyboard-operable anchors.
-- The first Tab stop is Skip to main content. Enter focuses the main region; the next Tab reaches the original recap link.
-- All existing interactive elements follow natural document order and support Shift+Tab. No positive tabindex or keyboard traps.
-- A visible 3px focus outline uses night-purple on light surfaces and gold on dark surfaces. No sticky elements obscure controls.
-- Search supports Enter from the input and Space/Enter on Go. Empty submission focuses the field and sets aria-invalid. Successful searches retain focus.
-- Existing navigation/footer/recap links, search input, and Go button provide targets at least 44 by 44 CSS pixels.
-
-The original placeholder destinations are preserved; see limitations below.
+- Native links replace click-only navigation divs. All controls use natural Tab order and Shift+Tab, with no positive tabindex or keyboard traps.
+- The first stop is the themed Skip to main content link. Enter focuses the named main landmark. The next Tab reaches the first mock form input.
+- Apply Now links to the labeled mock section. Enter focuses that section; the next Tab reaches Full name.
+- Focus outlines are 3px, with theme-appropriate contrast. There are no sticky overlays obscuring focused controls.
+- Search works with Enter or Go. Form radio buttons use arrow keys, checkboxes use Space, and buttons support native activation.
+- Invalid form submission focuses a named error-summary group. Its correction links focus the affected inputs, whose values are preserved.
+- Primary controls and links have targets at least 44 by 44 CSS pixels. Compact radio/checkbox controls are inside large clickable labels.
 
 ## Visual accessibility — 20 possible points
 
-The palette uses the reference site's night-purple, cream, lavender, gold, and plum colors. Contrast calculations for the actual pairs used:
+The reference site's night-purple, cream, lavender, and gold palette is retained. The right sidebar is darkened to muted gold-tan `#d9c69c`.
 
-| Usage | Colors | Ratio |
+| Usage | Colors | Contrast |
 | --- | --- | ---: |
-| Header/footer text | cream `#fffdf6` on night `#2d265b` | 13.40:1 |
-| Main text / navigation contrast | night-deep `#1e1940` and cream `#fffdf6` | 16.27:1 |
-| Header tagline | lavender `#d1c4e9` on night `#2d265b` | 8.30:1 |
-| Dark-surface focus | gold `#e0c57d` against night `#2d265b` | 8.09:1 |
-| Go text / search highlight | night-deep `#1e1940` on gold `#e0c57d` | 9.82:1 |
-| Light-surface links | plum `#4b3b5c` on cream `#fffdf6` | 9.92:1 |
-| Sidebar text | night-deep `#1e1940` on parchment `#f0f0d0` | 14.26:1 |
-| Sidebar link | plum `#4b3b5c` on parchment `#f0f0d0` | 8.70:1 |
+| Header/footer text | `#fffdf6` on `#2d265b` | 13.40:1 |
+| Main text / navigation | `#1e1940` and `#fffdf6` | 16.27:1 |
+| Header tagline | `#d1c4e9` on `#2d265b` | 8.30:1 |
+| Dark-surface focus | `#e0c57d` against `#2d265b` | 8.09:1 |
+| Gold button/highlight text | `#1e1940` on `#e0c57d` | 9.82:1 |
+| Main links | `#4b3b5c` on `#fffdf6` | 9.92:1 |
+| Sidebar text | `#1e1940` on `#d9c69c` | 9.86:1 |
+| Sidebar link | `#4b3b5c` on `#d9c69c` | 6.02:1 |
+| Form error text | `#952138` on `#fffdf6` | 8.08:1 |
 
-- Links are underlined. Search matches use both a highlight and underline. Empty searches have explicit error text and a dashed field border.
-- Responsive grid/flex layouts and proportional images avoid horizontal page overflow at 320, 375, 768, 1024, and 1440 CSS pixels.
-- Relative sizing supports 200% text enlargement. The suite also applies WCAG text-spacing overrides: 1.5 line height, 2em paragraph spacing, .12em letter spacing, and .16em word spacing.
-- Default sizes are 18px for body text/controls, 32px for main section headings, 28px for the sidebar heading, 16px for feedback/date, and 44–64px for the page title. All use relative units and remain responsive to browser font preferences. The skip link shares Go's gold fill/purple text, rounded corners, and a contrasting cream focus outline; forced-color mode uses system colors.
-- Only the h1 title uses the reference site's Grenze Gotisch font at weight 700; blackletter is hard to read, so h2 headings use the body font. A local WOFF2 file, preload, swap behavior, and serif fallback avoid a third-party font request or invisible text. Body text, headings, and controls use Verdana (fallbacks: DejaVu Sans, Tahoma, sans-serif) for its wide letterforms and clearly distinct characters such as I/l/1. Font license: `assets/grenze-gotisch-OFL.txt`.
-- A 320px layout tests the reflow width associated with 400% zoom on a 1280px viewport. The actual browser zoom UI is not automated.
-- Forced-color rules use system colors for surfaces, links, controls, focus, and highlights. Reduced-motion preferences disable animation, transitions, and smooth scrolling. No animation or flashing is introduced.
+- Relative sizes, wrapping layouts, native controls, and proportional photographs support resizing and browser preferences.
+- The suite checks 320, 375, 768, 1024, and 1440px widths, plus 200% root text size and WCAG text-spacing overrides.
+- A 320px viewport tests reflow at the width associated with 400% zoom on a 1280px viewport. Actual browser zoom controls are a separate manual check.
+- Errors use text, aria-invalid, and a dashed border; color is not the sole cue. Links are underlined. Search highlights also use an underline.
+- Forced colors use system colors, and reduced motion is respected. Only the h1 uses the locally hosted Grenze Gotisch font with swap behavior and a serif fallback. Body text, section headings, and controls preserve the repository’s Verdana font with DejaVu Sans, Tahoma, and sans-serif fallbacks.
 
 ## Semantic HTML and screen readers — 20 possible points
 
-- Valid HTML, English language, corrected title, properly closed elements, and relative asset paths.
-- Header, named main/footer navigation, main content, a named aside, and footer expose the original structure.
-- One h1 (HackTrent), then h2 headings for the original main/sidebar labels.
-- Original navigation, news item, and footer links use lists. The existing date is a machine-readable time element.
-- Both original photographs have meaningful alt descriptions. Their explicit dimensions reserve layout space.
-- Search has a visible, programmatically associated label, a search input type, an accessible Go button, connected feedback, and a native search landmark.
-- A persistent polite/atomic status region reports search errors and results. Repeated messages are cleared and reinserted so they can be announced again.
+- Valid document, English language, descriptive title, one h1, and logical h2/h3 hierarchy.
+- Header, named Main navigation, named Site search, named Main content, a named mock section/form, a labeled aside, and named Footer navigation expose structure.
+- The original news item is an article with a heading and machine-readable time. Lists retain native structure.
+- Both original images have meaningful alt attributes. Alt text is an accessible description, not a hover tooltip.
+- The form uses visible labels, native input types, autocomplete=name/email, native required states, fieldsets, and legends. Descriptions connect instructions and errors to their controls.
+- Validation uses a focused named group rather than simultaneous alert/focus announcements. Successful submission uses a persistent polite atomic status region and keeps focus on the button.
+- Search and form statuses are independent; repeated messages are made observable to assistive technology. These mechanisms are tested structurally; actual pronunciation and announcement timing need listening checks.
 
 ## Forms and interaction — 15 possible points
 
-Only the original Search and Go interface remains; no application or other form has been added.
+The requested mock form uses made-up name/email data, optional solo/team radio choices, and a required acknowledgement that it is a demonstration.
 
-- Search is case-insensitive, treats punctuation literally, and handles phrases crossing source-text line breaks.
-- Matches are highlighted within existing main/sidebar text. Clearing or changing the query removes old highlights and errors without changing the source copy.
-- Empty input gets a useful text error and aria-invalid. No matches gets explicit feedback.
-- Text is inserted using DOM text nodes, not interpreted as HTML. Search queries are not sent over the network when JavaScript is running.
-- No focus jump on successful search, no timed interaction, no CAPTCHA, no drag/hover requirement, and no data collection.
-- All original content and native links remain available without JavaScript. In-page search enhancement requires JavaScript.
+- Empty/whitespace names, missing/malformed email, and missing acknowledgement produce field-specific errors and a linked summary.
+- Correcting one input clears its invalid state and preserves other values. No validation focus jump occurs while typing.
+- A valid submission renders a safe text-only review and announces that nothing was sent or saved. There is no network submission or browser-storage write.
+- Editing clears stale results. Clear form removes values/errors/review, announces the reset, and focuses the name input. Reload starts with a clean form without autofocus.
+- Search indexes only original public copy; form details and reviews remain outside the index. Literal query handling and DOM text insertion avoid interpreting user data as HTML.
+- The original page remains readable without JavaScript; the mock section presents an explanatory fallback instead of active submission controls.
 
 ## Testing and technical quality — 20 possible points
-
-The suite has 20 checks per browser in installed Chrome and Microsoft Edge. A dedicated regression compares the entire original visible copy (excluding the skip link and transient search feedback) and verifies that invented sections/forms are absent. It also locks the original navigation destinations, including the known placeholders.
-
-Five states per browser receive full default axe scans: desktop, 320px mobile, empty-search error, highlighted search matches, and forced colors.
 
 ```sh
 npm ci
@@ -87,17 +77,14 @@ npm run test:html
 npm audit
 ```
 
-`npm run test:report` opens the generated browser report. Axe JSON summaries and screenshots are saved under `accessibility-results/`. Other checks cover keyboard order/focus, source-copy preservation after highlights, safe literal queries, actual asset loads, runtime errors, target sizes, responsive layout, text resizing/spacing, and direct file opening.
+A dedicated original-copy regression excludes the explicitly requested mock section and transient feedback, then compares all starter wording. Other tests inspect accessible roles/names/descriptions, required states, focus order, keyboard activation, errors, success, reset, network/storage behavior, safe text rendering, responsive states, direct file opening, and original assets.
 
-The preview server binds to loopback and serves only public site files. The site has no production packages, external fonts, third-party scripts, or build requirement. Original image files are unchanged.
+`npm run test:report` opens the report. Screenshots and JSON scan summaries are generated under `accessibility-results/`. The site has no production dependencies, external font requests, analytics, or build requirement. The preview server serves only public assets and binds to loopback.
 
-## Remaining limitations and human checks
+## Limits and manual checks
 
-- The starter links to `#about`, `#apply`, `#schedule`, `#contact`, `#image`, `#privacy`, `#terms`, and `#accessibility` have no supplied destination elements or pages. These original destinations are deliberately unchanged to preserve scope. They are keyboard accessible but do not lead to content. Resolving them requires actual destinations from the owner, not invented pages.
-- The original Lorem ipsum paragraphs are preserved rather than replaced with newly written information.
-- Search highlighting requires JavaScript. Without it, the original content remains available to browser Find.
-- Both browsers use Chromium. Firefox, Safari, actual screen-reader speech, and real OS high-contrast themes have not been verified by the automated suite.
-- Check NVDA/VoiceOver heading and landmark navigation, image descriptions, the Search label and error description, repeated result announcements, and highlight readability. Verify actual 200%/400% browser zoom and ask an assistive-technology user to complete the existing search and navigation flow.
-- Automated passing checks do not establish full WCAG conformance or guarantee judging points.
+Apply Now now has the mock-form destination. Original destinations `#about`, `#schedule`, `#contact`, `#image`, `#privacy`, `#terms`, and `#accessibility` still lack supplied content. They have not been represented as working pages. Original placeholder paragraphs and image files remain unchanged.
 
-References: [HackTrent visual reference](https://www.hacktrent.ca/) and [W3C WCAG 2.2](https://www.w3.org/TR/WCAG22/).
+Use [DEMO.md](./DEMO.md) to check NVDA or another available screen reader: headings/landmarks, both image descriptions, field labels and required state, fieldset legends, linked errors, radio/checkbox states, repeated search messages, success, and reset. Check actual 200%/400% browser zoom, real OS contrast themes, Firefox/Safari, and completion by an assistive-technology user. The automated suite cannot guarantee a score or establish full WCAG conformance.
+
+References: [WCAG 2.2](https://www.w3.org/TR/WCAG22/), [HackTrent visual reference](https://www.hacktrent.ca/), and [NVDA user guide](https://api.nvaccess.org/documentation/userGuide.html).

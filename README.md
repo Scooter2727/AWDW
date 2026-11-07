@@ -1,53 +1,41 @@
 # HackTrent accessibility challenge
 
-Accessibility fixes for the supplied website, preserving its original on-page information, photographs, navigation labels, and three-column structure. The colors follow the night-purple, cream, lavender, and gold palette used by the HackTrent reference site. No event information is imported from that site.
+Accessibility improvements for the supplied page, preserving its original wording and photographs. The explicitly requested mock form is a separate, clearly labeled demonstration. The original ZIP preview runs separately on port 4174; the updated site runs on port 4173.
 
-Only the HackTrent title (h1) uses Grenze Gotisch, matching the reference site's branding; section headings use the body font because blackletter is hard to read. The variable Latin font is hosted locally with `font-display: swap` and a Georgia/serif fallback. Its SIL Open Font License is included in `assets/grenze-gotisch-OFL.txt`. Body text, headings, and controls use Verdana (falling back to DejaVu Sans, Tahoma, or sans-serif), chosen for its wide letterforms and distinct characters.
-
-At the default browser text size, body text and controls are 18px, main section headings are 32px, sidebar headings are 28px, and the page title scales from 44px to 64px. Search feedback and the date are 16px. Sizes remain relative to the browser's base font. The skip link uses the same gold button fill and purple text as Go, with a clear cream focus outline on the purple header.
-
-Open `index.html` directly, or run:
+## Run and verify
 
 ```sh
 npm ci
 npm start
-```
-
-Visit http://127.0.0.1:4173. No build step or production packages are required.
-
-## Changes
-
-- Repaired document nesting and added semantic header, navigation, main, aside, and footer landmarks.
-- Promoted existing text to correctly ordered headings without changing its wording.
-- Added a keyboard skip link, native navigation links, visible focus outlines, and large control targets.
-- Added descriptions for the two original photographs and preserved their files.
-- Replaced low-contrast colors, made the layout responsive, and supported text resizing, text spacing, forced colors, and reduced motion.
-- Labeled the existing Search field, corrected its input type, and made Go search the existing main/sidebar text. Search highlights matches in place and announces feedback without adding content sections.
-- Preserved all original link destinations, including placeholders with no supplied pages.
-
-The added application form, draft download, schedule, FAQ, promotional copy, extra content sections, and policy text from the earlier revision have been removed.
-
-## Verification
-
-With Chrome and Microsoft Edge installed:
-
-```sh
 npm test
 npm run test:html
 npm audit
 ```
 
-The suite runs 20 checks per browser. It includes a full original-copy comparison, keyboard traversal, axe scans, search behavior, responsive layouts, enlarged text, forced colors, and direct-file/no-JavaScript behavior. Open the interactive report with `npm run test:report`. Screenshots and axe summaries are saved in `accessibility-results/`.
+Visit http://127.0.0.1:4173/ or open `index.html` directly. There is no build requirement or production package dependency. With installed Chrome and Microsoft Edge, the browser suite runs 28 tests per browser. Use `npm run test:report` for the interactive report. Generated screenshots and axe summaries are saved in `accessibility-results/`.
 
-See [ACCESSIBILITY.md](./ACCESSIBILITY.md) for the rubric mapping and remaining checks.
+## Implemented behavior
+
+- Semantic header, named navigation/search/main regions, a labeled form section, an aside, a titled news article, and a footer.
+- One h1, logical h2/h3 headings, lists, machine-readable date, and meaningful alt descriptions for both original photographs.
+- Native links and controls, a themed skip link, visible focus, large targets, and keyboard form interaction.
+- Readable typography, local Grenze Gotisch heading font, responsive layout, text resizing/spacing, reduced motion, and system-color support. The right sidebar uses a darker muted gold-tan with measured text contrast.
+- Search of the original public content with literal matching, highlights, errors, and polite announcements. Mock form values and its review are excluded from indexing.
+- A demo-only application form with labels, autocomplete purposes, native required states, fieldsets/legends, radio choices, checkbox acknowledgement, inline errors, a focused linked error summary, a local review, a polite success message, and Clear form.
+
+Use made-up details in the mock form. No form data is sent to a server or written to browser storage. Editing clears the previous review; clearing resets the fields, errors, and feedback, and returns focus to the name field. Without JavaScript, the original content remains available and the mock section explains why interactive controls are unavailable.
+
+## Demo and accessibility evidence
+
+See [DEMO.md](./DEMO.md) for a spoken explanation, NVDA navigation, alt-text demonstration, and exact form interactions. See [ACCESSIBILITY.md](./ACCESSIBILITY.md) for the rubric mapping, contrast measurements, test results, and remaining listening checks.
+
+Only the h1 title uses the local Grenze Gotisch font; body text, section headings, and controls use Verdana with DejaVu Sans, Tahoma, and sans-serif fallbacks. The heading font's SIL Open Font License is in `assets/grenze-gotisch-OFL.txt`. Text sizes at the default browser base are 18px for body/controls, 32px for main section headings, 28px for the sidebar heading, 16px for feedback/date, and 44–64px for the page title. The body and section headings retain the repository’s updated readable Verdana font.
 
 ## Scope and limits
 
-The original links to `#about`, `#apply`, `#schedule`, `#contact`, `#image`, `#privacy`, `#terms`, and `#accessibility` have no supplied destination content. They remain unchanged; no replacement pages or event facts have been invented. Home and the added skip link have working targets. A complete operational navigation system requires actual destinations from the site owner.
+Apply Now now targets the explicitly labeled mock form. Original destinations `#about`, `#schedule`, `#contact`, `#image`, `#privacy`, `#terms`, and `#accessibility` still have no supplied content. No real event information or policy pages have been invented. The original photographs and original Lorem ipsum paragraphs remain intact.
 
-The page content remains readable without JavaScript. In-page highlighting and feedback require JavaScript. Search does not upload queries when JavaScript is running. Both photographs are unchanged; their original file sizes are retained.
-
-Actual screen-reader speech and Firefox/Safari behavior still need human verification. Passing automated checks does not establish complete WCAG conformance or a guaranteed judging score.
+Chrome and Edge share Chromium. Actual screen-reader speech, Firefox/Safari, real OS themes, and user testing remain separate manual checks. Automated passing results do not establish complete WCAG conformance or a guaranteed judging score.
 
 ## Made by:
 

@@ -29,7 +29,7 @@ async function audit(page, testInfo, label) {
 async function expectOriginalCopy(page) {
     const copy = await page.locator("body").evaluate(body => {
         const clone = body.cloneNode(true);
-        clone.querySelectorAll(".skip-link, #search-status, script").forEach(node => node.remove());
+        clone.querySelectorAll(".skip-link, #search-status, .mock-panel, script").forEach(node => node.remove());
         return clone.textContent.replace(/\s+/g, " ").trim();
     });
     expect(copy).toBe([
@@ -39,12 +39,12 @@ async function expectOriginalCopy(page) {
         "this is the right content HackTrent2025 Recap November 15, 2025",
         "© 2026 HackTrent. All rights reserved. Privacy Policy Terms of Use Accessibility"
     ].join(" "));
-    await expect(page.locator(".content p")).toHaveCount(2);
-    expect((await page.locator(".content p").allTextContents()).map(normalize)).toEqual(originalParagraphs);
+    await expect(page.locator(".original-copy p")).toHaveCount(2);
+    expect((await page.locator(".original-copy p").allTextContents()).map(normalize)).toEqual(originalParagraphs);
     await expect(page.locator("#application-form, table, details, .hero, .policy-grid")).toHaveCount(0);
 }
 
-test("content: preserve all original copy without added event information or sections", async ({ page }) => {
+test("content: preserve original copy alongside the explicitly requested mock form", async ({ page }) => {
     await page.goto("/");
     await expectOriginalCopy(page);
     for (const [label, destination] of originalNavigation) {
@@ -52,7 +52,7 @@ test("content: preserve all original copy without added event information or sec
     }
     await expect(page.getByRole("link", { name: "HackTrent2025 Recap" })).toHaveAttribute("href", "#image");
     const missing = await page.locator('a[href^="#"]').evaluateAll(links => links.filter(link => !document.getElementById(link.hash.slice(1))).map(link => link.hash));
-    expect(missing).toEqual(["#about", "#apply", "#schedule", "#contact", "#image", "#privacy", "#terms", "#accessibility"]);
+    expect(missing).toEqual(["#about", "#schedule", "#contact", "#image", "#privacy", "#terms", "#accessibility"]);
 });
 
 test("desktop: semantics, image descriptions, assets, labels, and axe", async ({ page }, testInfo) => {
@@ -65,7 +65,7 @@ test("desktop: semantics, image descriptions, assets, labels, and axe", async ({
     await expect(page.getByRole("complementary", { name: "this is the right content" })).toBeVisible();
     await expect(page.getByRole("searchbox", { name: "Search:" })).toBeVisible();
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
-    await expect(page).toHaveTitle("Accessibility Challenge");
+    await expect(page).toHaveTitle("HackTrent | Accessibility Challenge");
     expect(await page.locator("img").evaluateAll(images => images.length === 2 && images.every(img => img.alt.trim() && img.complete && img.naturalWidth > 0))).toBe(true);
     await audit(page, testInfo, "desktop");
     expect(errors).toEqual([]);
@@ -81,7 +81,7 @@ test("keyboard: skip link bypasses header and navigation", async ({ page }) => {
     await page.keyboard.press("Enter");
     await expect(page.getByRole("main")).toBeFocused();
     await page.keyboard.press("Tab");
-    await expect(page.getByRole("link", { name: "HackTrent2025 Recap" })).toBeFocused();
+    await expect(page.getByRole("textbox", { name: "Full name (required)", exact: true })).toBeFocused();
 });
 
 test("keyboard: all existing controls are reachable, focus stays visible, and reverse Tab works", async ({ page }) => {
@@ -105,6 +105,7 @@ test("keyboard: all existing controls are reachable, focus stays visible, and re
     }
     expect(visited.map(item => item.id || item.text)).toEqual([
         "Skip to main content", "search-query", "Go", ...originalNavigation.map(([label]) => label),
+        "mock-name", "mock-email", "mock-solo", "mock-acknowledgement", "Submit mock form", "Clear form",
         "HackTrent2025 Recap", "Privacy Policy", "Terms of Use", "Accessibility"
     ]);
     await page.keyboard.press("Shift+Tab");
@@ -127,7 +128,7 @@ test("search: empty input exposes an error, preserves focus, and passes axe", as
     await input.press("Enter");
     await expect(input).toBeFocused();
     await expect(input).toHaveAttribute("aria-invalid", "true");
-    await expect(page.getByRole("status")).toHaveText("Enter a search term.");
+    await expect(page.locator("#search-status")).toHaveText("Enter a search term.");
     await expect(input).toHaveAccessibleDescription("Enter a search term.");
     await audit(page, testInfo, "search-error");
     await input.fill("lorem");
@@ -141,18 +142,18 @@ test("search: highlight original text, announce repeats, clear safely, and prese
     await input.press("Enter");
     await expect(input).toBeFocused();
     await expect(page.locator("mark")).toHaveCount(2);
-    await expect(page.getByRole("status")).toContainText("2 matches found");
+    await expect(page.locator("#search-status")).toContainText("2 matches found");
     await expectOriginalCopy(page);
     await input.press("Enter");
-    await expect(page.getByRole("status")).toContainText("2 matches found");
+    await expect(page.locator("#search-status")).toContainText("2 matches found");
     await audit(page, testInfo, "search-matches");
     await input.fill("<img src=x onerror=alert(1)>");
     await input.press("Enter");
-    await expect(page.getByRole("status")).toHaveText("No matches found.");
+    await expect(page.locator("#search-status")).toHaveText("No matches found.");
     await expect(page.locator("img")).toHaveCount(2);
     await expect(page.locator("mark")).toHaveCount(0);
     await input.fill("");
-    await expect(page.getByRole("status")).toBeEmpty();
+    await expect(page.locator("#search-status")).toBeEmpty();
     await expectOriginalCopy(page);
 });
 
@@ -164,7 +165,7 @@ test("search: literal regex punctuation and wrapped phrases are handled", async 
     await expect(page.locator("mark")).toHaveCount(1);
     await input.fill("[.*]");
     await input.press("Enter");
-    await expect(page.getByRole("status")).toHaveText("No matches found.");
+    await expect(page.locator("#search-status")).toHaveText("No matches found.");
     await expectOriginalCopy(page);
 });
 
@@ -176,7 +177,7 @@ test("search: Go works with Space without moving focus or uploading the query", 
     await page.getByRole("button", { name: "Go", exact: true }).focus();
     await page.keyboard.press("Space");
     await expect(page.getByRole("button", { name: "Go", exact: true })).toBeFocused();
-    await expect(page.getByRole("status")).toContainText("1 match found");
+    await expect(page.locator("#search-status")).toContainText("1 match found");
     expect(requests).toEqual([]);
     await expect(page).toHaveURL("http://127.0.0.1:4173/");
 });
@@ -202,7 +203,7 @@ for (const [width, textSize] of [[1280, "200%"], [320, "100%"]]) {
         const input = page.getByRole("searchbox", { name: "Search:" });
         await input.fill("lorem");
         await input.press("Enter");
-        await expect(page.getByRole("status")).toContainText("2 matches found");
+        await expect(page.locator("#search-status")).toContainText("2 matches found");
         await expectOriginalCopy(page);
     });
 }
@@ -210,7 +211,7 @@ for (const [width, textSize] of [[1280, "200%"], [320, "100%"]]) {
 test("touch targets: existing links, buttons, and search input are at least 44px", async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 900 });
     await page.goto("/");
-    const sizes = await page.locator(".site-nav a, .site-footer a, .news a, button, input").evaluateAll(elements => elements.map(element => {
+    const sizes = await page.locator('.site-nav a, .site-footer a, .news a, button, input:not([type="radio"]):not([type="checkbox"]), .mock-choice').evaluateAll(elements => elements.map(element => {
         const { width, height } = element.getBoundingClientRect();
         return { text: element.textContent || element.id, width, height };
     }));
@@ -253,5 +254,147 @@ test("static files: original assets, styles, and search work from a file URL", a
     const input = page.getByRole("searchbox", { name: "Search:" });
     await input.fill("lorem");
     await input.press("Enter");
-    await expect(page.getByRole("status")).toContainText("2 matches found");
+    await expect(page.locator("#search-status")).toContainText("2 matches found");
+});
+
+test("semantics: named landmarks, article, heading hierarchy, fieldsets, and input purposes", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByRole("main", { name: "Main content", exact: true })).toHaveCount(1);
+    await expect(page.getByRole("search", { name: "Site search", exact: true })).toHaveCount(1);
+    await expect(page.getByRole("form", { name: "Mock application form", exact: true })).toBeVisible();
+    await expect(page.getByRole("article", { name: "HackTrent2025 Recap", exact: true })).toHaveCount(1);
+    await expect(page.getByRole("group", { name: "Contact details", exact: true })).toBeVisible();
+    await expect(page.getByRole("group", { name: "Participation (optional)", exact: true })).toBeVisible();
+    expect(await page.getByRole("heading").allTextContents()).toEqual(["HackTrent", "Main content", "Mock application form", "this is the right content", "HackTrent2025 Recap"]);
+    await expect(page.locator("#mock-name")).toHaveAttribute("autocomplete", "name");
+    await expect(page.locator("#mock-name")).toHaveAttribute("required", "");
+    await expect(page.locator("#mock-email")).toHaveAttribute("autocomplete", "email");
+    await expect(page.locator("#mock-email")).toHaveAccessibleDescription("For example, alex@example.com.");
+    await expect(page.getByRole("radio", { name: "On my own", exact: true })).toHaveAccessibleDescription("Use the arrow keys to move between these options.");
+});
+
+test("mock form: Apply Now links to the labeled demonstration and keyboard input", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("link", { name: "Apply Now", exact: true }).focus();
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/#apply$/);
+    await expect(page.getByRole("region", { name: "Mock application form", exact: true })).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(page.locator("#mock-name")).toBeFocused();
+});
+
+test("mock form: errors have focus, linked corrections, invalid states, and descriptions", async ({ page }, testInfo) => {
+    await page.goto("/#apply");
+    await page.getByRole("button", { name: "Submit mock form", exact: true }).click();
+    await expect(page.getByRole("group", { name: "Check the mock form", exact: true })).toBeFocused();
+    await expect(page.locator("#mock-errors a")).toHaveCount(3);
+    await expect(page.locator("#mock-name")).toHaveAttribute("aria-invalid", "true");
+    await expect(page.locator("#mock-name")).toHaveAccessibleDescription("Enter a full name for the demo.");
+    await expect(page.locator("#mock-acknowledgement")).toHaveAccessibleDescription("Confirm that you understand this is a demonstration.");
+    await page.keyboard.press("Tab");
+    await expect(page.getByRole("link", { name: "Enter a full name for the demo.", exact: true })).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(page.locator("#mock-name")).toBeFocused();
+    await audit(page, testInfo, "mock-errors");
+    await page.screenshot({ path: `accessibility-results/${testInfo.project.name}-mock-errors.png`, fullPage: true });
+});
+
+test("mock form: invalid email and whitespace names keep entered values during correction", async ({ page }) => {
+    await page.goto("/#apply");
+    await page.locator("#mock-name").fill("   ");
+    await page.locator("#mock-email").fill("invalid-email");
+    await page.locator("#mock-acknowledgement").check();
+    await page.getByRole("button", { name: "Submit mock form", exact: true }).click();
+    await expect(page.locator("#mock-errors a")).toHaveCount(2);
+    await expect(page.locator("#mock-email-error")).toHaveText("Enter an email address like alex@example.com.");
+    await page.locator("#mock-name").fill("Alex Demo");
+    await expect(page.locator("#mock-errors a")).toHaveCount(1);
+    await page.getByRole("link", { name: "Enter an email address like alex@example.com.", exact: true }).click();
+    await expect(page.locator("#mock-email")).toBeFocused();
+    await page.locator("#mock-email").fill("alex@example.com");
+    await expect(page.locator("#mock-name")).toHaveValue("Alex Demo");
+    await expect(page.locator("#mock-acknowledgement")).toBeChecked();
+    await expect(page.locator("#mock-errors")).toBeHidden();
+    await expect(page.locator("#mock-email")).not.toHaveAttribute("aria-invalid", "true");
+});
+
+test("mock form: keyboard radio, checkbox, submit, status, and local-only review", async ({ page }, testInfo) => {
+    await page.goto("/#apply");
+    const requests = [];
+    page.on("request", request => requests.push(request.url()));
+    await page.locator("#mock-name").focus();
+    await page.keyboard.type("Alex Demo");
+    await page.keyboard.press("Tab");
+    await page.keyboard.type("alex@example.com");
+    await page.keyboard.press("Tab");
+    await expect(page.getByRole("radio", { name: "On my own", exact: true })).toBeFocused();
+    await page.keyboard.press("Space");
+    await page.keyboard.press("ArrowRight");
+    await expect(page.getByRole("radio", { name: "With a team", exact: true })).toBeChecked();
+    await page.keyboard.press("Tab");
+    await expect(page.locator("#mock-acknowledgement")).toBeFocused();
+    await page.keyboard.press("Space");
+    await page.keyboard.press("Tab");
+    await expect(page.getByRole("button", { name: "Submit mock form", exact: true })).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(page.getByRole("status", { name: "Mock form feedback", exact: true })).toContainText("Mock submission complete. No information was sent or saved.");
+    await expect(page.getByRole("button", { name: "Submit mock form", exact: true })).toBeFocused();
+    await expect(page.locator("#mock-review-name")).toHaveText("Alex Demo");
+    await expect(page.locator("#mock-review-email")).toHaveText("alex@example.com");
+    await expect(page.locator("#mock-review-participation")).toHaveText("With a team");
+    expect(requests).toEqual([]);
+    expect(await page.evaluate(() => ({ local: localStorage.length, session: sessionStorage.length }))).toEqual({ local: 0, session: 0 });
+    await audit(page, testInfo, "mock-success");
+    await page.screenshot({ path: `accessibility-results/${testInfo.project.name}-mock-success.png`, fullPage: true });
+});
+
+test("mock form: optional radio selection, stale review removal, and keyboard reset", async ({ page }) => {
+    await page.goto("/#apply");
+    await page.locator("#mock-name").fill("<img src=x onerror=alert(1)>");
+    await page.locator("#mock-email").fill("alex@example.com");
+    await page.locator("#mock-acknowledgement").check();
+    await page.getByRole("button", { name: "Submit mock form", exact: true }).click();
+    await expect(page.locator("#mock-review-name")).toHaveText("<img src=x onerror=alert(1)>");
+    await expect(page.locator("#mock-success img")).toHaveCount(0);
+    await expect(page.locator("#mock-review-participation")).toHaveText("Not selected");
+    await page.locator("#mock-name").fill("Changed demo name");
+    await expect(page.locator("#mock-success")).toBeHidden();
+    await expect(page.locator("#mock-status")).toBeEmpty();
+    await page.getByRole("button", { name: "Clear form", exact: true }).focus();
+    await page.keyboard.press("Space");
+    await expect(page.locator("#mock-name")).toBeFocused();
+    await expect(page.locator("#mock-name")).toBeEmpty();
+    await expect(page.locator("#mock-email")).toBeEmpty();
+    await expect(page.locator("#mock-acknowledgement")).not.toBeChecked();
+    await expect(page.locator("#mock-status")).toHaveText("Mock form cleared.");
+    await page.reload();
+    await expect(page.locator("#mock-name")).toBeEmpty();
+    await expect(page.locator("#mock-name")).not.toBeFocused();
+});
+
+test("mock form: user-entered details are excluded from page search", async ({ page }) => {
+    await page.goto("/");
+    await page.locator("#mock-name").fill("PrivateDemoPhrase");
+    await page.locator("#mock-email").fill("private@example.com");
+    await page.locator("#mock-acknowledgement").check();
+    await page.getByRole("button", { name: "Submit mock form", exact: true }).click();
+    await page.getByRole("searchbox", { name: "Search:" }).fill("PrivateDemoPhrase");
+    await page.getByRole("button", { name: "Go", exact: true }).click();
+    await expect(page.locator("#search-status")).toHaveText("No matches found.");
+    await expect(page.locator("#mock-success mark")).toHaveCount(0);
+});
+
+test("mock form: at 320px error and success states reflow; forced colors preserve valid contrast", async ({ page }, testInfo) => {
+    await page.setViewportSize({ width: 320, height: 900 });
+    await page.emulateMedia({ forcedColors: "active" });
+    await page.goto("/#apply");
+    await page.getByRole("button", { name: "Submit mock form", exact: true }).click();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.locator("#mock-name").fill("Alex Demo");
+    await page.locator("#mock-email").fill("alex@example.com");
+    await page.locator("#mock-acknowledgement").check();
+    await page.getByRole("button", { name: "Submit mock form", exact: true }).click();
+    await expect(page.locator("#mock-success")).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await audit(page, testInfo, "mock-forced-colors");
 });

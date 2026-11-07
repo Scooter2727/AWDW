@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#2d265b">
-    <title>Accessibility Challenge</title>
+    <title>HackTrent | Accessibility Challenge</title>
     <link rel="preload" href="./assets/grenze-gotisch-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="./reset.css">
     <link rel="stylesheet" href="./styles.css">
@@ -18,7 +18,7 @@
             <h1>HackTrent</h1>
             <p><i>@ Trent University</i></p>
         </div>
-        <form class="search" role="search" id="site-search">
+        <form class="search" role="search" aria-label="Site search" id="site-search">
             <label for="search-query">Search:</label>
             <div class="search-controls">
                 <input type="search" id="search-query" name="q" placeholder="Search..." maxlength="256" aria-describedby="search-status" aria-controls="main-content right-content">
@@ -38,8 +38,9 @@
         </ul>
     </nav>
 
-    <main class="content" id="main-content" tabindex="-1">
-        <h2>Main content</h2>
+    <main class="content" id="main-content" tabindex="-1" aria-labelledby="main-title">
+        <div class="original-copy">
+        <h2 id="main-title">Main content</h2>
         <img src="./assets/happyHackers.JPG" width="4898" height="3266" alt="Students gathered around laptops at shared tables, discussing their projects.">
         <p>lorem ipsum dolor sit amet consectetur adipiscing elit proident sunt placeat est quos incididunt amet
             blanditiis et est deserunt ut laboris qui eum cum nam fugiat placeat sunt quo consequat dolore nisi
@@ -50,17 +51,77 @@
             ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
             fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
             deserunt mollit anim id est laborum."</p>
+        </div>
+
+        <section class="mock-panel" id="apply" tabindex="-1" aria-labelledby="mock-form-title">
+            <h2 id="mock-form-title">Mock application form</h2>
+            <p id="mock-form-description">Demo only. Use made-up details. Nothing is sent or saved, and this form does not register you for an event.</p>
+            <p id="mock-form-fallback">Enable JavaScript to try the mock form.</p>
+            <form id="mock-form" aria-labelledby="mock-form-title" aria-describedby="mock-form-description mock-form-help" hidden>
+                <p id="mock-form-help">Fields marked “required” must be completed.</p>
+                <div class="error-summary" id="mock-errors" role="group" tabindex="-1" aria-labelledby="mock-errors-title" hidden>
+                    <h3 id="mock-errors-title">Check the mock form</h3>
+                    <ul></ul>
+                </div>
+
+                <fieldset>
+                    <legend>Contact details</legend>
+                    <div class="mock-grid">
+                        <div class="field">
+                            <label for="mock-name">Full name (required)</label>
+                            <input id="mock-name" name="fullName" type="text" autocomplete="name" required maxlength="100" aria-describedby="mock-name-error">
+                            <p class="field-error" id="mock-name-error" hidden></p>
+                        </div>
+                        <div class="field">
+                            <label for="mock-email">Email address (required)</label>
+                            <input id="mock-email" name="email" type="email" autocomplete="email" required maxlength="254" aria-describedby="mock-email-hint mock-email-error">
+                            <p class="field-hint" id="mock-email-hint">For example, alex@example.com.</p>
+                            <p class="field-error" id="mock-email-error" hidden></p>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Participation (optional)</legend>
+                    <p class="field-hint" id="mock-participation-hint">Use the arrow keys to move between these options.</p>
+                    <div class="mock-options">
+                        <label class="mock-choice"><input id="mock-solo" type="radio" name="participation" value="On my own" aria-describedby="mock-participation-hint"> On my own</label>
+                        <label class="mock-choice"><input id="mock-team" type="radio" name="participation" value="With a team" aria-describedby="mock-participation-hint"> With a team</label>
+                    </div>
+                </fieldset>
+
+                <div class="field">
+                    <label class="mock-choice"><input id="mock-acknowledgement" name="acknowledgement" type="checkbox" required aria-describedby="mock-acknowledgement-error"> I understand this form is a demonstration (required).</label>
+                    <p class="field-error" id="mock-acknowledgement-error" hidden></p>
+                </div>
+                <div class="mock-actions">
+                    <button class="primary-button" type="submit">Submit mock form</button>
+                    <button class="secondary-button" type="reset">Clear form</button>
+                </div>
+                <p id="mock-status" class="mock-status" role="status" aria-label="Mock form feedback" aria-live="polite" aria-atomic="true"></p>
+                <div id="mock-success" class="mock-success" hidden>
+                    <h3>Submitted details (demo)</h3>
+                    <dl>
+                        <dt>Full name</dt><dd id="mock-review-name"></dd>
+                        <dt>Email address</dt><dd id="mock-review-email"></dd>
+                        <dt>Participation</dt><dd id="mock-review-participation"></dd>
+                    </dl>
+                </div>
+            </form>
+        </section>
     </main>
 
     <aside class="right-bar" id="right-content" aria-labelledby="right-title">
         <h2 id="right-title">this is the right content</h2>
         <ul>
-            <li class="news">
+            <li>
+                <article class="news" aria-labelledby="recap-title">
                 <img src="./assets/HackTrent2025.jpg" width="4032" height="3024" alt="HackTrent 2025 welcome slide and balloons in a lecture hall.">
                 <div>
-                    <a href="#image">HackTrent2025 Recap</a>
+                    <h3 id="recap-title"><a href="#image">HackTrent2025 Recap</a></h3>
                     <p><time datetime="2025-11-15">November 15, 2025</time></p>
                 </div>
+                </article>
             </li>
         </ul>
     </aside>
