@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2d265b">
+    <title>Accessibility Challenge</title>
+    <link rel="preload" href="./assets/grenze-gotisch-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="./reset.css">
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./script.js" defer></script>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="site-header" id="home">
+        <div class="site-name">
+            <h1>HackTrent</h1>
+            <p><i>@ Trent University</i></p>
+        </div>
+        <form class="search" role="search" id="site-search">
+            <label for="search-query">Search:</label>
+            <div class="search-controls">
+                <input type="search" id="search-query" name="q" placeholder="Search..." maxlength="256" aria-describedby="search-status" aria-controls="main-content right-content">
+                <button type="submit">Go</button>
+            </div>
+            <p class="search-status" id="search-status" role="status" aria-live="polite" aria-atomic="true"></p>
+        </form>
+    </header>
+
+    <nav class="site-nav" aria-label="Main navigation">
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#apply">Apply Now</a></li>
+            <li><a href="#schedule">Event Schedule</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main class="content" id="main-content" tabindex="-1">
+        <h2>Main content</h2>
+        <img src="./assets/happyHackers.JPG" width="4898" height="3266" alt="Students gathered around laptops at shared tables, discussing their projects.">
+        <p>lorem ipsum dolor sit amet consectetur adipiscing elit proident sunt placeat est quos incididunt amet
+            blanditiis et est deserunt ut laboris qui eum cum nam fugiat placeat sunt quo consequat dolore nisi
+            ullamco et sunt deserunt veniam reprehenderit et imperdiet cillum eum possimus quas at fugiat eiusmod
+            cumque voluptas dolor</p>
+        <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+            ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+            fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+            deserunt mollit anim id est laborum."</p>
+    </main>
+
+    <aside class="right-bar" id="right-content" aria-labelledby="right-title">
+        <h2 id="right-title">this is the right content</h2>
+        <ul>
+            <li class="news">
+                <img src="./assets/HackTrent2025.jpg" width="4032" height="3024" alt="HackTrent 2025 welcome slide and balloons in a lecture hall.">
+                <div>
+                    <a href="#image">HackTrent2025 Recap</a>
+                    <p><time datetime="2025-11-15">November 15, 2025</time></p>
+                </div>
+            </li>
+        </ul>
+    </aside>
+
+    <footer class="site-footer">
+        <p>© 2026 HackTrent. All rights reserved.</p>
+        <nav aria-label="Footer">
+            <ul>
+                <li><a href="#privacy">Privacy Policy</a></li>
+                <li><a href="#terms">Terms of Use</a></li>
+                <li><a href="#accessibility">Accessibility</a></li>
+            </ul>
+        </nav>
+    </footer>
+</body>
+</html>

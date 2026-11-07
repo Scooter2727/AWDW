@@ -1,0 +1,21 @@
+{
+  "name": "hacktrent-accessible-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Accessible HackTrent challenge website with browser-based regression checks",
+  "scripts": {
+    "start": "node server.cjs",
+    "test": "playwright test",
+    "test:report": "playwright show-report",
+    "test:html": "html-validate index.html"
+  },
+  "overrides": {
+    "glob": "^14.0.4",
+    "minimatch": "^11.0.5"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.0",
+    "@playwright/test": "^1.56.1",
+    "html-validate": "^10.3.1"
+  }
+}

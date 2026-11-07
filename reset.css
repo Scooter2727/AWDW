@@ -1,0 +1,6 @@
+/* Keep useful browser defaults, including native controls and list semantics. */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, p, figure { margin: 0; }
+button, input, select, textarea { font: inherit; }
+img { display: block; max-width: 100%; height: auto; }
+[hidden] { display: none !important; }

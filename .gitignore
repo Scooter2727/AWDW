@@ -1,0 +1,6 @@
+node_modules/
+test-results/
+playwright-report/
+.original-preview/
+accessibility-results/*.png
+accessibility-results/*.json
