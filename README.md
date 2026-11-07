@@ -48,3 +48,7 @@ The original links to `#about`, `#apply`, `#schedule`, `#contact`, `#image`, `#p
 The page content remains readable without JavaScript. In-page highlighting and feedback require JavaScript. Search does not upload queries when JavaScript is running. Both photographs are unchanged; their original file sizes are retained.
 
 Actual screen-reader speech and Firefox/Safari behavior still need human verification. Passing automated checks does not establish complete WCAG conformance or a guaranteed judging score.
+
+## Made by:
+
+James, Scott, Crystal, Anton
