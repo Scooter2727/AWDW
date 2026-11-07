@@ -27,7 +27,7 @@ body {
     margin-inline: auto;
     background: var(--cream);
     color: var(--night-deep);
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family: Verdana, "DejaVu Sans", Tahoma, sans-serif;
     font-size: 1.125rem;
     line-height: 1.65;
     overflow-wrap: anywhere;
@@ -36,7 +36,8 @@ a { color: var(--plum); text-decoration-thickness: .1em; text-underline-offset: 
 a:hover { text-decoration-thickness: .18em; }
 a, button, input, [tabindex] { scroll-margin-block: 1.5rem; }
 :focus { outline: 3px solid var(--night-deep); outline-offset: 5px; }
-h1, h2 { font-family: "Grenze Gotisch", Georgia, serif; line-height: 1.2; }
+h1, h2 { line-height: 1.2; }
+h1 { font-family: "Grenze Gotisch", Georgia, serif; }
 h1 { font-size: clamp(2.75rem, 6vw, 4rem); font-weight: 700; }
 h2 { font-size: 2rem; font-weight: 700; }
 [hidden] { display: none !important; }

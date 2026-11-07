@@ -9,7 +9,7 @@ Updated November 7, 2026. Scope: improve accessibility of the original challenge
 - Axe: 10 scans across both browsers, zero detected violations.
 - HTML validation: passed without errors or warnings.
 - Dependency audit: zero reported vulnerabilities.
-- Final browser run after the readability/skip-link update: 29.9 seconds. Chrome's rendered-font inspection confirmed Grenze Gotisch is used by all three existing headings; a separate visual check confirmed the themed skip link fits at 320px. Original missing link destinations remain a documented limitation; passing tests do not certify those links as functional.
+- Final browser run after the readability/skip-link update: 29.9 seconds. Grenze Gotisch is now limited to the h1 title; a separate visual check confirmed the themed skip link fits at 320px. Original missing link destinations remain a documented limitation; passing tests do not certify those links as functional.
 
 ## Content preservation
 
@@ -49,7 +49,7 @@ The palette uses the reference site's night-purple, cream, lavender, gold, and p
 - Responsive grid/flex layouts and proportional images avoid horizontal page overflow at 320, 375, 768, 1024, and 1440 CSS pixels.
 - Relative sizing supports 200% text enlargement. The suite also applies WCAG text-spacing overrides: 1.5 line height, 2em paragraph spacing, .12em letter spacing, and .16em word spacing.
 - Default sizes are 18px for body text/controls, 32px for main section headings, 28px for the sidebar heading, 16px for feedback/date, and 44–64px for the page title. All use relative units and remain responsive to browser font preferences. The skip link shares Go's gold fill/purple text, rounded corners, and a contrasting cream focus outline; forced-color mode uses system colors.
-- Existing h1/h2 titles use the reference site's Grenze Gotisch font at weight 700. A local WOFF2 file, preload, swap behavior, and serif fallback avoid a third-party font request or invisible text. Paragraphs and controls keep their system font. Font license: `assets/grenze-gotisch-OFL.txt`.
+- Only the h1 title uses the reference site's Grenze Gotisch font at weight 700; blackletter is hard to read, so h2 headings use the body font. A local WOFF2 file, preload, swap behavior, and serif fallback avoid a third-party font request or invisible text. Body text, headings, and controls use Verdana (fallbacks: DejaVu Sans, Tahoma, sans-serif) for its wide letterforms and clearly distinct characters such as I/l/1. Font license: `assets/grenze-gotisch-OFL.txt`.
 - A 320px layout tests the reflow width associated with 400% zoom on a 1280px viewport. The actual browser zoom UI is not automated.
 - Forced-color rules use system colors for surfaces, links, controls, focus, and highlights. Reduced-motion preferences disable animation, transitions, and smooth scrolling. No animation or flashing is introduced.
 

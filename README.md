@@ -2,7 +2,7 @@
 
 Accessibility fixes for the supplied website, preserving its original on-page information, photographs, navigation labels, and three-column structure. The colors follow the night-purple, cream, lavender, and gold palette used by the HackTrent reference site. No event information is imported from that site.
 
-Existing headings use Grenze Gotisch, matching the reference site's section titles. The variable Latin font is hosted locally with `font-display: swap` and a Georgia/serif fallback. Its SIL Open Font License is included in `assets/grenze-gotisch-OFL.txt`. Body text remains in the readable system font.
+Only the HackTrent title (h1) uses Grenze Gotisch, matching the reference site's branding; section headings use the body font because blackletter is hard to read. The variable Latin font is hosted locally with `font-display: swap` and a Georgia/serif fallback. Its SIL Open Font License is included in `assets/grenze-gotisch-OFL.txt`. Body text, headings, and controls use Verdana (falling back to DejaVu Sans, Tahoma, or sans-serif), chosen for its wide letterforms and distinct characters.
 
 At the default browser text size, body text and controls are 18px, main section headings are 32px, sidebar headings are 28px, and the page title scales from 44px to 64px. Search feedback and the date are 16px. Sizes remain relative to the browser's base font. The skip link uses the same gold button fill and purple text as Go, with a clear cream focus outline on the purple header.
 
